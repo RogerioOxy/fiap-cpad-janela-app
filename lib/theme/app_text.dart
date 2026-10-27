@@ -1,36 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
-/// Escala tipográfica do Janela: 9 papéis em 6 tamanhos
-/// (12 · 14 · 16 · 18 · 24 · 32). Três papéis reaproveitam tamanho trocando de
-/// família ou de peso, então não são níveis novos.
-///
-/// O `height` está escrito como divisão literal, do jeito que a Aula CPAD 16
-/// (página 4) mostra: `height: 40 / 32`. Fica auto-documentado e a conferência
-/// contra o Figma é direta. Em Flutter o `height` é MULTIPLICADOR, não pixel:
-/// copiar o Line Height do Figma em px quebra a tela.
-///
-/// **Duas famílias, e a segunda tem motivo técnico.** A interface é Poppins,
-/// aplicada globalmente por `GoogleFonts.poppinsTextTheme()` no `MaterialApp`,
-/// que é o que o Guia Prático (página 4) marca como recomendado. Mas Poppins
-/// não resolve tabela de horas: o avanço é largo e o `1` é uma haste com
-/// bandeirola e sem base. Como a tela deste app é sobretudo uma coluna de
-/// horários, hora e contagem vão em JetBrains Mono, que é tabular por
-/// construção e desenhada para desambiguar `1`, `7` e `0`.
-///
-/// Isso não acrescenta dependência: `GoogleFonts.jetBrainsMono(...)` é o mesmo
-/// construto `GoogleFonts.poppins(...)` da página 3 do Guia, mudando só o nome
-/// da família, no mesmo pacote `google_fonts`.
-///
-/// Os estilos de Poppins são `const` e sem `fontFamily`, porque herdam a
-/// família do `textTheme` global. Os dois estilos mono são `final`, porque
-/// `GoogleFonts.jetBrainsMono(...)` é chamada em tempo de execução e não é
-/// expressão constante.
+/// Escala local: Poppins na interface e JetBrains Mono nas horas e contagens.
 class AppText {
   /// Nome do produto na tela de entrada.
   static const TextStyle brandTitle = TextStyle(
+    fontFamily: 'Poppins',
     fontSize: 32,
     fontWeight: FontWeight.w600,
     height: 40 / 32,
@@ -40,6 +16,7 @@ class AppText {
 
   /// Título de tela e da `AppBar`.
   static const TextStyle screenTitle = TextStyle(
+    fontFamily: 'Poppins',
     fontSize: 24,
     fontWeight: FontWeight.w600,
     height: 32 / 24,
@@ -49,6 +26,7 @@ class AppText {
 
   /// Nome do espaço no card (`Sala 312`).
   static const TextStyle cardTitle = TextStyle(
+    fontFamily: 'Poppins',
     fontSize: 18,
     fontWeight: FontWeight.w600,
     height: 24 / 18,
@@ -57,6 +35,7 @@ class AppText {
 
   /// Microcopy, subtítulo, mensagem, texto de confirmação.
   static const TextStyle body = TextStyle(
+    fontFamily: 'Poppins',
     fontSize: 16,
     fontWeight: FontWeight.w400,
     height: 24 / 16,
@@ -66,6 +45,7 @@ class AppText {
   /// Texto do botão. Reaproveita o tamanho de [body] com peso maior, em vez de
   /// criar um sétimo tamanho.
   static const TextStyle button = TextStyle(
+    fontFamily: 'Poppins',
     fontSize: 16,
     fontWeight: FontWeight.w600,
     height: 20 / 16,
@@ -74,6 +54,7 @@ class AppText {
 
   /// Palavra do estado no chip. A cor vem do status, então não é fixada aqui.
   static const TextStyle statusLabel = TextStyle(
+    fontFamily: 'Poppins',
     fontSize: 14,
     fontWeight: FontWeight.w600,
     height: 20 / 14,
@@ -86,6 +67,7 @@ class AppText {
   /// justamente no tamanho onde ela mais sofre. Nada de caixa-alta abaixo de
   /// 12dp.
   static const TextStyle label = TextStyle(
+    fontFamily: 'Poppins',
     fontSize: 12,
     fontWeight: FontWeight.w500,
     height: 16 / 12,
@@ -97,7 +79,9 @@ class AppText {
   ///
   /// Regra de legibilidade: hora nunca abaixo de 14dp, e sempre com o
   /// separador `h` (`15h40`, nunca `1540`), o que dá contexto ao numeral.
-  static final TextStyle timeValue = GoogleFonts.jetBrainsMono(
+  static const TextStyle timeValue = TextStyle(
+    fontFamily: 'JetBrainsMono',
+    fontVariations: [FontVariation('wght', 500)],
     fontSize: 16,
     fontWeight: FontWeight.w500,
     height: 20 / 16,
@@ -106,7 +90,9 @@ class AppText {
 
   /// Contagem de livres, ocupados e em manutenção no painel do momento.
   /// A cor vem do status, então não é fixada aqui.
-  static final TextStyle numberXL = GoogleFonts.jetBrainsMono(
+  static const TextStyle numberXL = TextStyle(
+    fontFamily: 'JetBrainsMono',
+    fontVariations: [FontVariation('wght', 600)],
     fontSize: 32,
     fontWeight: FontWeight.w600,
     height: 40 / 32,
