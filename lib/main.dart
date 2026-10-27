@@ -1,26 +1,51 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'dart:async';
 
+import 'package:flutter/material.dart';
+
+import 'data/reservas_repository.dart';
 import 'screens/login_screen.dart';
+import 'state/janela_state.dart';
+import 'theme/app_spacing.dart';
+import 'theme/app_text.dart';
 import 'theme/app_colors.dart';
 
-void main() {
-  runApp(const JanelaApp());
+void main() => runApp(const JanelaApp());
+
+class JanelaApp extends StatefulWidget {
+  const JanelaApp({super.key, this.repository});
+
+  final ReservasRepository? repository;
+
+  @override
+  State<JanelaApp> createState() => _JanelaAppState();
 }
 
-/// Raiz do Janela.
-///
-/// O `ThemeData` fica deliberadamente enxuto, com três coisas só:
-/// `colorScheme` semeado pelo âmbar da marca, `useMaterial3` e o `textTheme`
-/// global do Poppins. É exatamente o que o material do semestre ensina.
-/// `elevatedButtonTheme`, `inputDecorationTheme`, `cardTheme` e `appBarTheme`
-/// não aparecem em nenhum dos seis PDFs da disciplina (verificado por busca),
-/// e `ThemeData` global customizado, `ThemeExtension` e Design Tokens são o
-/// anúncio da Aula 17, que ainda não foi dada. Estilo de componente, portanto,
-/// fica inline por instância, com `ElevatedButton.styleFrom` e
-/// `InputDecoration`, que é como as aulas fazem.
-class JanelaApp extends StatelessWidget {
-  const JanelaApp({super.key});
+class _JanelaAppState extends State<JanelaApp> with WidgetsBindingObserver {
+  late final JanelaState _state = JanelaState(repository: widget.repository);
+  late final Timer _relogio;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _relogio = Timer.periodic(
+      const Duration(minutes: 1),
+      (_) => _state.atualizar(),
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _state.atualizar();
+  }
+
+  @override
+  void dispose() {
+    _relogio.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    _state.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,31 +53,58 @@ class JanelaApp extends StatelessWidget {
       title: 'Janela',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // A semente é o âmbar da marca. Semeando com um neutro azul, os
-        // detalhes que o Material 3 distribui de graça (cursor, ripple, borda
-        // focada, seleção de texto) sairiam azuis e criariam um segundo acento
-        // por acidente, quebrando a regra de um único acento quente.
-        //
-        // `brightness` é parâmetro nomeado do mesmo `ColorScheme.fromSeed`
-        // ensinado no Guia Prático (página 15). É o único acréscimo ao exemplo
-        // dele, e existe porque o âmbar só lê como luz havendo escuro em volta:
-        // sobre branco ele dá 1,83:1 e reprova qualquer critério de contraste.
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primary,
-          brightness: Brightness.dark,
-        ),
+        colorScheme:
+            ColorScheme.fromSeed(
+              seedColor: AppColors.primary,
+              brightness: Brightness.dark,
+            ).copyWith(
+              primary: AppColors.primary,
+              onPrimary: AppColors.onPrimary,
+              secondary: AppColors.primary,
+              onSecondary: AppColors.onPrimary,
+              surface: AppColors.surface,
+              onSurface: AppColors.textPrimary,
+              onSurfaceVariant: AppColors.textSecondary,
+              error: AppColors.statusOcupado,
+              outline: AppColors.border,
+            ),
         useMaterial3: true,
-        // O `textTheme` global é o que o Guia Prático (página 4) marca como
-        // recomendado. A base escura entra explicitamente: sem ela, o
-        // `poppinsTextTheme()` monta sobre a base do tema claro e o texto sai
-        // quase preto sobre fundo escuro.
-        textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
+        fontFamily: 'Poppins',
+        scaffoldBackgroundColor: AppColors.background,
+        dialogTheme: const DialogThemeData(
+          backgroundColor: AppColors.surface,
+          surfaceTintColor: Colors.transparent,
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppColors.background,
+          foregroundColor: AppColors.textPrimary,
+          titleTextStyle: AppText.cardTitle,
+        ),
+        navigationBarTheme: const NavigationBarThemeData(
+          backgroundColor: AppColors.surface,
+          indicatorColor: AppColors.surfaceAlt,
+        ),
+        chipTheme: ChipThemeData(
+          backgroundColor: AppColors.surfaceAlt,
+          selectedColor: AppColors.primary,
+          secondaryLabelStyle: AppText.statusLabel.copyWith(
+            color: AppColors.onPrimary,
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: AppColors.surface,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.radius),
+            borderSide: const BorderSide(color: AppColors.border),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.radius),
+            borderSide: const BorderSide(color: AppColors.border),
+          ),
+        ),
       ),
-      // Rotas nomeadas já declaradas, mesmo com uma tela só. O CP5 acrescenta
-      // as telas ao mapa sem mexer no `main.dart`, que é o motivo de o mapa
-      // existir desde agora.
-      initialRoute: '/',
-      routes: {'/': (context) => const LoginScreen()},
+      home: LoginScreen(state: _state),
     );
   }
 }

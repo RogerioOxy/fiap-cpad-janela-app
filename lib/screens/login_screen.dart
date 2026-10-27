@@ -1,29 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../data/espacos_mock.dart';
+import '../state/janela_state.dart';
+import '../widgets/janela_widgets.dart';
+import 'aluno_shell.dart';
+import 'coordenacao_screen.dart';
+import 'guia_visual_screen.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_shadows.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text.dart';
 
-/// Tela de entrada do Janela.
-///
-/// É a única tela que o Checkpoint 4 precisa entregar rodando, e é uma tela do
-/// produto final, não um placeholder descartável: a marca, a paleta, a
-/// tipografia e a régua de espaçamento que ela usa são as mesmas que o CP5 vai
-/// reaproveitar sem alterar. Congelar o visual aqui é o que permite ao CP5 ser
-/// fiel ao design deste checkpoint em vez de redesenhar.
-///
-/// `StatelessWidget` porque nada nesta tela muda em resposta a interação. É a
-/// regra de decisão da Aula CPAD 14 (página 10): "Esse widget vai mudar em
-/// resposta a algo? NÃO, StatelessWidget."
-///
-/// Estilo de botão e de campo fica inline, por instância. `ThemeData` com
-/// `elevatedButtonTheme` e `inputDecorationTheme` não aparece em nenhuma aula
-/// do semestre (verificado por busca nos seis PDFs), então centralizar estilo
-/// de componente no tema seria usar o que não foi ensinado.
+/// Entrada do campus piloto, com dados simulados.
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({super.key, required this.state});
+
+  final JanelaState state;
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +70,16 @@ class LoginScreen extends StatelessWidget {
                         _buildBotaoAluno(context),
                         const SizedBox(height: AppSpacing.md),
                         _buildBotaoCoordenacao(context),
+                        TextButton.icon(
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const GuiaVisualScreen(),
+                            ),
+                          ),
+                          icon: const Icon(Icons.palette_outlined),
+                          label: const Text('Guia visual'),
+                        ),
                         const SizedBox(height: AppSpacing.xl),
                         _buildIdentificacao(),
                         const SizedBox(height: AppSpacing.lg),
@@ -146,103 +146,29 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBotaoAluno(BuildContext context) {
-    final livres = contarPorStatus(StatusEspaco.livre);
+  Widget _buildBotaoAluno(BuildContext context) => BotaoJanela(
+    texto: 'Ver salas livres agora',
+    icone: Icons.search,
+    onPressed: () => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => AlunoShell(state: state)),
+    ),
+  );
 
-    // O brilho âmbar sai de um Container com BoxDecoration, e não da
-    // `elevation` do botão, porque `BoxDecoration` com `boxShadow` é o que a
-    // Aula CPAD 16 (página 6) ensinou.
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSpacing.radius),
-        boxShadow: const [AppShadows.accentGlow],
-      ),
-      child: SizedBox(
-        width: double.infinity,
-        child: ElevatedButton.icon(
-          onPressed: () => _avisar(
-            context,
-            '$livres de ${espacos.length} espaços livres agora no campus piloto.',
-          ),
-          icon: const Icon(Icons.search, size: 20),
-          label: const Text('Ver salas livres agora', style: AppText.button),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.onPrimary,
-            elevation: 0,
-            // `minimumSize` em vez de altura fixa: com escala de texto grande o
-            // rótulo precisa de duas linhas, e altura travada o recortaria.
-            // Rolagem não resolve altura interna.
-            minimumSize: const Size.fromHeight(AppSpacing.buttonHeight),
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.md,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppSpacing.radius),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// A coordenação é o público que pagaria pelo produto, então ela tem entrada
-  /// própria desde a primeira tela. Botão secundário: `surfaceAlt` em vez de
-  /// âmbar, porque só a ação principal é quente.
-  Widget _buildBotaoCoordenacao(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () => _avisar(
-          context,
-          'O painel de demanda da coordenação entra no Checkpoint 6.',
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.surfaceAlt,
-          foregroundColor: AppColors.textPrimary,
-          elevation: 0,
-          minimumSize: const Size.fromHeight(AppSpacing.buttonHeight),
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.lg,
-            vertical: AppSpacing.md,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.radius),
-          ),
-        ),
-        child: const Text('Entrar como coordenação', style: AppText.button),
-      ),
-    );
-  }
+  Widget _buildBotaoCoordenacao(BuildContext context) => BotaoJanela(
+    texto: 'Entrar como coordenação',
+    secundario: true,
+    onPressed: () => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => CoordenacaoScreen(state: state)),
+    ),
+  );
 
   Widget _buildIdentificacao() {
     return const Text(
       'Rogério Deligi Ferreira Filho (RM561942)\n'
       'Maria Fernanda Garavelli Dantas (RM562686)',
       style: AppText.label,
-    );
-  }
-
-  /// `ScaffoldMessenger` com `SnackBar`, como a Aula CPAD 13 (página 9)
-  /// ensinou. A mensagem lê a contagem do mock em vez de texto fixo, para a
-  /// tela provar que a camada de dados está ligada.
-  void _avisar(BuildContext context, String mensagem) {
-    // `hideCurrentSnackBar` antes de mostrar a nova: sem isso, toques repetidos
-    // enfileiram mensagens e uma antiga reaparece depois que a pessoa já parou
-    // de tocar. Esse defeito apareceu de verdade ao capturar a tela do README:
-    // um SnackBar residual cobriu a identificação dos integrantes.
-    final messenger = ScaffoldMessenger.of(context);
-    messenger.hideCurrentSnackBar();
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(mensagem, style: AppText.body),
-        backgroundColor: AppColors.surfaceAlt,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
-        ),
-      ),
     );
   }
 }
