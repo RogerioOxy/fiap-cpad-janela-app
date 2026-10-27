@@ -2,253 +2,206 @@
 
 **Salas livres agora, e até que horário.**
 
+[Baixar o APK (v1.0.0)](https://github.com/RogerioOxy/fiap-cpad-janela-app/releases/download/v1.0.0/Janela-1.0.0.apk) · [Página da versão](https://github.com/RogerioOxy/fiap-cpad-janela-app/releases/tag/v1.0.0)
+
 <img src="assets/images/janela_icon_512.png" width="96" alt="Marca do Janela">
 
-**A visão do produto**: um app que responde, numa tela, quais salas, laboratórios e auditórios do campus estão livres neste momento e até que horário, deixa o aluno reservar o intervalo pelo celular, e devolve à coordenação um painel de demanda construído sobre os mesmos dados.
+O Janela ajuda o aluno a encontrar um espaço livre no campus e saber até que horário pode usá-lo. É possível combinar filtros, consultar a agenda, reservar e cancelar horários, enquanto a coordenação acompanha a ocupação e a demanda. O app usa dados simulados e mantém as reservas em memória durante a sessão.
 
-**O que este checkpoint entrega**: o alicerce. Marca e identidade visual definidas, a estrutura do projeto criada, o mock de espaços escrito, e a tela de entrada rodando. As telas de lista, filtro, detalhe e reserva chegam no CP5 e no CP6, e a tabela da seção `c)` diz qual funcionalidade entra em qual etapa.
-
-Projeto integrado dos Checkpoints 4, 5 e 6 de Cross-Platform Application Development. Este repositório é a entrega, e ele cresce a cada checkpoint em vez de ser substituído.
-
-| | |
-|---|---|
 | Disciplina | Cross-Platform Application Development |
+|---|---|
 | Professor | Hercules Ramos |
-| Curso | Ciência da Computação, 2º ano, turma 2CCPW |
-| Instituição | FIAP, 2º semestre de 2026 |
+| Turma | Ciência da Computação, 2CCPW, FIAP |
+| Período | 2º semestre de 2026 |
 | Tecnologia | Flutter 3.47.2 e Dart 3.13.2 |
-| Etapa atual | **Checkpoint 4: idealização** |
+| Versão declarada | 1.0.0+1 |
 
----
+## Integrantes e divisão das frentes
 
-## a) Integrantes e papel de cada um
+A dupla mantém a continuidade dos checkpoints anteriores. A revisão cruzada e a apresentação são responsabilidades dos dois.
 
-**Composição do grupo.** O enunciado prevê grupos de 4 a 6 alunos. Este projeto é entregue por uma dupla, e é uma decisão nossa, não um esquecimento: somos a mesma dupla que assinou os dois checkpoints anteriores desta disciplina, e preferimos manter a continuidade do projeto a montar um grupo novo no meio dele. Para cobrir as quatro frentes do checkpoint com duas pessoas, cada um é responsável por duas e revisor das outras duas, em vez de haver um revisor dedicado.
+| Integrante | RM | CP4 | Frente acordada no CP5 | Frente acordada no CP6 |
+|---|---|---|---|---|
+| Rogério Deligi Ferreira Filho | RM561942 | Marca, naming, projeto Flutter e repositório | Shell de navegação, lista e filtros | Fluxo de reserva, geração e teste do APK |
+| Maria Fernanda Garavelli Dantas | RM562686 | Identidade visual, documentação e pitch | Home, card de espaço, detalhe e mock | Aba de reservas, cancelamento e painel da coordenação |
 
-| Nome | RM | Frente principal | Revisa |
-|---|---|---|---|
-| Rogério Deligi Ferreira Filho | RM561942 | Marca e naming · projeto Flutter e repositório | tudo da Maria Fernanda |
-| Maria Fernanda Garavelli Dantas | RM562686 | Identidade visual · documentação e pitch | tudo do Rogério |
+## O que mudou desde o CP4
 
-**Entregáveis concretos de cada frente neste checkpoint**
+O CP4 entregou a entrada, a marca e um inventário com horários em texto. Nesta versão, os horários têm início e fim, o relógio é injetável, as regras impedem conflitos e o cancelamento devolve disponibilidade. O inventário contém 16 espaços em cinco andares, com recursos, aulas, manutenção e reservas fictícias. O tema mantém a identidade escura e as fontes são assets locais.
 
-| Frente | Responsável | O que saiu |
+A paleta está visível neste README e no Guia visual dentro do app. As amostras leem os mesmos tokens do código. A identidade do CP4 aparece em componentes compartilhados: cards, selos com cor, ícone e palavra, botões, horários monoespaçados e barras. A navegação inferior oferece Início, Espaços, Reservas e Guia. As funcionalidades abaixo estão implementadas, cobertas por testes e foram percorridas no emulador Android 14.
+
+## Problema, público e proposta de valor
+
+O aluno com trabalho em grupo precisa encontrar um espaço e saber por quanto tempo pode usá-lo. A coordenação precisa consultar a demanda declarada das reservas. Sem check-in, reserva não prova presença física.
+
+A proposta de produto está no [pitch e suas fontes](docs/PITCH.md). O protótipo usa inventário e agenda simulados, sem integração com uma instituição. A continuidade do domínio vem do [CP1 em React Native](https://github.com/RogerioOxy/fiap-cpad-cp1-salas-app) e do [CP2](https://github.com/RogerioOxy/fiap-cpad-cp2-salas-app).
+
+## Funcionalidades e telas
+
+As dez capturas abaixo são reais, obtidas no emulador Android 14 (API 34) com o APK de release instalado. A [captura da entrada do CP4](docs/img/tela-entrada.png) registra a referência de composição original.
+
+| Requisito do MVP | Estado observável | Referência de imagem |
 |---|---|---|
-| Marca e naming | Rogério | nome, naming rationale, tom de voz e as microcopy padrão, em [`docs/MARCA.md`](docs/MARCA.md) |
-| Identidade visual | Maria Fernanda | paleta com contraste verificado, tipografia, logo e regras de uso, em [`docs/MARCA.md`](docs/MARCA.md); arquivos em `assets/images/` |
-| Documentação e pitch | Maria Fernanda | este README e [`docs/PITCH.md`](docs/PITCH.md) |
-| Projeto Flutter e repositório | Rogério | árvore `lib/`, tema, tela de entrada, mock de espaços e testes |
+| Entrada, marca, proposta e duas portas | Abre o shell do aluno ou o painel da coordenação. Mostra os dois RMs e acesso ao Guia visual | ![Entrada](docs/img/telas/entrada.png) |
+| Painel do momento | Exibe livres, ocupados e em manutenção, com atalho para Espaços | ![Início](docs/img/telas/inicio.png) |
+| Lista com status e limite de uso | Cards mostram andar, tipo, capacidade, estado e horário-limite | ![Espaços](docs/img/telas/espacos.png) |
+| Filtros por andar, tipo e nome | Chips e busca combinam filtros em tempo real; estado vazio oferece limpeza | ![Filtros](docs/img/telas/filtros.png) |
+| Detalhe, recursos e agenda | Exibe uso atual, próximo uso, agenda do dia e faixas oferecidas com motivo de bloqueio | ![Detalhe](docs/img/telas/detalhe.png) |
+| Reserva de faixa disponível | Seleção abre resumo; confirmação exibe espaço, intervalo e acesso às reservas. Conflitos exibem alternativa | ![Reserva confirmada](docs/img/telas/reserva-confirmada.png) |
+| Minhas reservas | Aba lista as reservas do aluno por horário e oferece atalho quando vazia | ![Minhas reservas](docs/img/telas/minhas-reservas.png) |
+| Cancelamento | Diálogo permite manter ou confirmar. Sucesso remove a reserva e devolve o horário | ![Cancelar](docs/img/telas/cancelar.png) |
+| Coordenação | Barras nativas mostram ocupação simulada por andar e demanda declarada por hora | ![Coordenação](docs/img/telas/coordenacao.png) |
+| Guia visual na entrada e aba Guia | Renderiza 15 cores, nove estilos de texto, régua de espaçamento e componentes a partir dos tokens reais | ![Guia visual](docs/img/telas/guia-visual.png) |
 
-Nenhum dos dois aprova o próprio trabalho. A revisão é cruzada em código e em texto: a `app_colors.dart` é escrita por quem programa, mas os valores são da frente de identidade visual, e quem definiu a paleta confere se o hexadecimal chegou certo.
+O botão de voltar retorna à tela anterior. A saída no shell e na coordenação retorna à Entrada. Trocar de porta preserva as reservas da sessão. A aba Guia corresponde ao acesso de perfil do aluno, sem autenticação real.
 
-**Divisão já acordada para os próximos checkpoints**, para não renegociar depois. No CP5, Rogério fica com o shell de navegação e com a lista de espaços mais os filtros; Maria Fernanda fica com a Home, o card de espaço, a tela de detalhe e o amadurecimento do mock. No CP6, Rogério fica com o fluxo de reserva e com a geração e o teste do APK; Maria Fernanda fica com a aba de reservas, o cancelamento e o painel da coordenação. A apresentação em aula e a leitura final da documentação são feitas pelos dois.
+## Design system
 
----
+A marca representa um caixilho com um vidro aceso. A interface mantém tema escuro, Poppins e acento âmbar para ação e marca. Hora e contagem usam JetBrains Mono. Estado usa sua própria escala, sempre acompanhado de texto e ícone. O [documento de marca](docs/MARCA.md) conserva naming, tom de voz, geometria e regras de uso.
 
-## b) Sobre o projeto
+### Paleta completa
 
-### O problema
+As razões usam luminância relativa sRGB. O par de comparação está em cada linha. `divider` e `slotDim` são decorativos: não atendem sozinhos ao contraste de controle. `primaryInk` é exclusivo da marca sobre fundo claro e aparece no Guia como amostra identificada.
 
-Todo campus tem mais espaço vazio do que parece, mas o único registro confiável de uso é a grade horária, e a grade só sabe onde tem aula marcada. O que sobra entre duas aulas, o que vaga quando um professor falta e o que fica livre nos primeiros horários da noite não aparece em lugar nenhum.
-
-Na prática o aluno resolve isso subindo andar por andar e olhando pela janela da porta. Quando finalmente acha uma sala vazia, ainda não sabe se entra turma ali em dez minutos, então o grupo se instala sem garantia e às vezes é expulso no meio do trabalho.
-
-Do outro lado, a coordenação vê a grade e não a ocupação real. Aula cancelada continua ocupando a sala no papel, sala vaga não aparece como capacidade disponível, e ao mesmo tempo chegam reclamações de falta de espaço para trabalho em grupo. A decisão de realocar turma ou de reservar verba para uma sala nova é tomada sem número de uso.
-
-### Público-alvo
-
-**Primário: aluno com trabalho em grupo presencial.** Grupos de 2 a 6 alunos de graduação que precisam de uma sala ou laboratório por 1 a 2 horas, tipicamente no intervalo entre aulas.
-
-A dor é específica: a busca por espaço é feita a pé e no escuro. Sobe o andar, olha pela porta, testa a maçaneta. Achando uma sala vazia, não tem como saber se ela está vazia por vinte minutos ou pelo resto da tarde. A alternativa é disputar mesa em área comum, onde não se consegue falar em voz alta nem usar lousa. O ganho é ver numa lista o que está livre agora, com o horário em que a sala volta a ser usada, e reservar antes de sair do lugar onde está.
-
-**Secundário: aluno do turno noturno e quem vai ao campus fora do próprio horário de aula.** Aqui o deslocamento já foi feito e é irreversível, então o custo do erro é alto: chegar e descobrir que o laboratório está em manutenção ou que o andar inteiro está em aula significa uma viagem perdida. O ganho é consultar pelo celular antes de subir, ou antes de sair de casa, com status de manutenção como informação de primeira classe e não como surpresa na porta.
-
-**Terciário, e é quem pagaria: coordenação de curso ou operação do campus.** O aluno não paga por um app do próprio campus, então este é o lado que assinaria o contrato. O que a coordenação ganha é um painel com a demanda declarada pelos alunos: quais andares e faixas de horário concentram pedido, e quanto do espaço aparece como livre em cada turno.
-
-### Proposta de valor
-
-App que responde em uma tela quais salas, laboratórios e auditórios do campus estão livres agora e até que horário, permite ao aluno reservar o intervalo pelo celular, e devolve à coordenação um painel de demanda construído sobre os mesmos dados.
-
-### Continuidade com o 1º semestre
-
-O domínio é o mesmo de dois projetos que a dupla já entregou em React Native com Expo:
-
-- **CP1**: [`fiap-cpad-cp1-salas-app`](https://github.com/RogerioOxy/fiap-cpad-cp1-salas-app), consulta de disponibilidade com listagem, status visual e filtro por andar.
-- **CP2**: [`fiap-cpad-cp2-salas-app`](https://github.com/RogerioOxy/fiap-cpad-cp2-salas-app), evolução direta, com cadastro e login persistidos, reserva por usuário, busca em tempo real e tema claro e escuro.
-
-O que muda no 2º semestre é o stack, que passa a ser Flutter, e o posicionamento. O nome "FIAP Salas" sai porque é apenas descritivo, usa marca de terceiro e amarra o modelo de negócio a um cliente único. O produto passa a ser software para universidades em geral, com a FIAP como cliente piloto. O tema não mudou: mudou de quem é o produto.
-
----
-
-## c) Funcionalidades do MVP
-
-Toda funcionalidade abaixo é construível com o que as aulas CPAD 13 a 16 e o Guia Prático ensinaram. A única dependência externa que o app usa é `google_fonts`. O `cupertino_icons` que o `flutter create` declara ficou no `pubspec.yaml` e não é importado em nenhum arquivo.
-
-| Funcionalidade | Entra em |
-|---|---|
-| Tela de entrada com a marca, a proposta de valor e as duas portas de acesso, aluno e coordenação | **CP4** |
-| Painel do momento: quantos espaços livres, ocupados e em manutenção, com atalho para a lista | CP5 |
-| Lista de espaços com status visual e o horário até quando cada um está livre | CP5 |
-| Filtro por andar e por tipo de espaço, em tempo real | CP5 |
-| Detalhe do espaço: capacidade, andar, uso atual, próximo uso e horários oferecidos | CP5 |
-| Reserva de um horário disponível, com confirmação visível | CP6 |
-| Aba de reservas do usuário, com cancelamento | CP6 |
-| Painel da coordenação: ocupação por andar e horários mais pedidos | CP6 |
-
-### O que ficou fora do MVP, e por quê
-
-| Fora | Motivo |
-|---|---|
-| Backend real e integração com a grade horária | O CP5 diz que os dados são mockados e sem backend, e HTTP não foi visto nas aulas 13 a 16 |
-| Persistência local | Nenhum pacote de armazenamento foi ensinado, então a reserva desaparece ao fechar o app. O CP2 tinha isso com AsyncStorage, e a perda é consciente |
-| Login com senha de verdade | Sem biblioteca de autenticação e sem backend, um login real seria senha em texto puro num arquivo Dart, o que é pior do que não ter login |
-| Check-in na sala, por QR code ou crachá | É o item mais importante que fica fora, e a consequência é direta: sem check-in, o painel mostra **demanda declarada** e não ocupação medida |
-| Notificação quando um espaço é liberado | Exige plugin de notificação e algo rodando fora do app |
-| Mapa do andar | Custo alto em asset e layout, e não muda a decisão que o aluno precisa tomar |
-| Tema claro e escuro alternável | O CP2 tinha, e não volta agora de propósito: `ThemeData` global customizado e Design Tokens são conteúdo da aula 17, ainda não dada |
-| Aprovação para auditório e espaço com autorização | Auditório na vida real não é reserva, é pedido que alguém aprova. Isso pede papéis, fila e backend |
-
----
-
-## d) Marca e identidade visual
-
-Detalhamento completo em **[`docs/MARCA.md`](docs/MARCA.md)**: naming rationale, tom de voz com as microcopy padrão, paleta com as razões de contraste calculadas, escala tipográfica e regras de uso do logo.
-
-![Prancha de identidade visual do Janela](docs/img/identidade-visual.png)
-
-Resumo:
-
-- **Nome**: na gíria acadêmica brasileira, janela é o vão livre na grade de horário. É a unidade que o app vende, porque a reserva é sempre de um intervalo entre dois usos, nunca da sala inteira.
-- **Paleta**: tema escuro, com um único acento âmbar (`#FFB000`) que só significa ação e marca. Estado de sala usa a própria escala de status, nunca âmbar.
-- **Tipografia**: Poppins na interface, JetBrains Mono em hora e contagem, porque a tela é sobretudo uma tabela de horários e o algarismo do Poppins é largo.
-- **Logo**: caixilho com montante vertical e um vidro aceso. Gerado por script parametrizado em [`design/gerar_marca.py`](design/gerar_marca.py), não desenhado à mão, o que torna a marca reproduzível.
-
----
-
-## e) Pitch: mercado, modelo de negócio e diferencial
-
-Detalhamento completo em **[`docs/PITCH.md`](docs/PITCH.md)**, com os concorrentes reais nomeados, a fonte de cada afirmação e o que foi marcado como não verificado.
-
-Resumo: existe muito software de reserva de espaço, é maduro e algum já tem app móvel. A lacuna é de **para quem** esse software foi desenhado. Os produtos sérios de espaço acadêmico medem o próprio sucesso em tempo administrativo poupado, e o que existe voltado ao aluno em geral mostra disponibilidade sem permitir reserva. Modelo de negócio recomendado: SaaS por espaço gerenciado, com piloto de valor fechado por campus.
-
----
-
-## f) O projeto Flutter
-
-### Como rodar
-
-Pré-requisitos: [Flutter SDK](https://docs.flutter.dev/get-started/install) 3.47 ou superior. `flutter doctor` precisa apontar ao menos um alvo disponível (Chrome já basta).
+| Amostra 48x48 | Token | Hexadecimal | Papel | Contraste |
+|---|---|---|---|---|
+| ![primary](docs/img/paleta/primary.png) | `primary` | `#FFB000` | Ação e marca | 10.12:1 com `onPrimary` |
+| ![primaryDark](docs/img/paleta/primaryDark.png) | `primaryDark` | `#D18E00` | Botão primário pressionado | 6.69:1 com `onPrimary` |
+| ![onPrimary](docs/img/paleta/onPrimary.png) | `onPrimary` | `#1B1200` | Texto sobre ação âmbar | 10.12:1 com `primary` |
+| ![primaryInk](docs/img/paleta/primaryInk.png) | `primaryInk` | `#B87400` | Marca sobre branco, uso fora da interface | 3.79:1 com `FFFFFF` |
+| ![background](docs/img/paleta/background.png) | `background` | `#0F1115` | Fundo da tela | 17.15:1 com `textPrimary` |
+| ![surface](docs/img/paleta/surface.png) | `surface` | `#191D25` | Cards e painéis | 15.32:1 com `textPrimary` |
+| ![surfaceAlt](docs/img/paleta/surfaceAlt.png) | `surfaceAlt` | `#232833` | Botão secundário e superfície elevada | 13.40:1 com `textPrimary` |
+| ![textPrimary](docs/img/paleta/textPrimary.png) | `textPrimary` | `#F2F4F7` | Títulos e valores | 17.15:1 com `background` |
+| ![textSecondary](docs/img/paleta/textSecondary.png) | `textSecondary` | `#A2AAB8` | Metadados e apoio | 7.22:1 com `surface` |
+| ![border](docs/img/paleta/border.png) | `border` | `#657084` | Contorno de controles | 3.38:1 com `surface` |
+| ![divider](docs/img/paleta/divider.png) | `divider` | `#2C313B` | Separador decorativo, sem função informativa isolada | 1.29:1 com `surface` |
+| ![slotDim](docs/img/paleta/slotDim.png) | `slotDim` | `#39404C` | Trilha decorativa de tempo | 1.62:1 com `surface` |
+| ![statusLivre](docs/img/paleta/statusLivre.png) | `statusLivre` | `#3DDC97` | Estado livre, acompanhado de ícone e palavra | 9.55:1 com `surface` |
+| ![statusOcupado](docs/img/paleta/statusOcupado.png) | `statusOcupado` | `#FF7A9A` | Estado ocupado e conflito, com ícone e palavra | 6.84:1 com `surface` |
+| ![statusManutencao](docs/img/paleta/statusManutencao.png) | `statusManutencao` | `#8795AE` | Estado em manutenção, com ícone e palavra | 5.58:1 com `surface` |
 
 ```bash
-# 1. Clone o repositório
-git clone https://github.com/RogerioOxy/fiap-cpad-janela-app.git
-cd fiap-cpad-janela-app
-
-# 2. Baixe as dependências
-flutter pub get
-
-# 3. Rode no Chrome
-flutter run -d chrome
-
-# ou, havendo emulador Android configurado
-flutter run
+python design/gerar_amostras.py
+python design/gerar_amostras.py --check
 ```
 
-Verificação:
+O script usa somente biblioteca padrão, com `struct` e `zlib`; lê `lib/theme/app_colors.dart` e grava `docs/img/paleta/<token>.png`.
 
-```bash
-flutter analyze   # precisa terminar em "No issues found!"
-flutter test      # 5 testes, todos passando
-flutter build web # precisa terminar em "Built build\web"
+### Tipografia
+
+| Token | Família | Tamanho | Peso | Altura de linha |
+|---|---|---|---|---|
+| brandTitle | Poppins | 32 | 600 | 40 |
+| numberXL | JetBrains Mono | 32 | 600 | 40 |
+| screenTitle | Poppins | 24 | 600 | 32 |
+| cardTitle | Poppins | 18 | 600 | 24 |
+| body | Poppins | 16 | 400 | 24 |
+| button | Poppins | 16 | 600 | 20 |
+| timeValue | JetBrains Mono | 16 | 500 | 20 |
+| statusLabel | Poppins | 14 | 600 | 20 |
+| label | Poppins | 12 | 500 | 16 |
+
+`lib/theme/app_text.dart` define as famílias explicitamente. `pubspec.yaml` registra Poppins Regular, Medium, SemiBold e Bold e JetBrains Mono variável. Nas horas e contagens, `fontWeight` acompanha `FontVariation('wght', peso)`. As licenças OFL estão em `assets/fonts/`. Não há download de fontes durante o uso.
+
+### Espaçamento e componentes
+
+`AppSpacing` fornece 4, 8, 12, 16, 24 e 32; raio de card 12 e de pílula 999; botão com mínimo de 52 e marca de 88. `AppShadows` define costura de painel e brilho âmbar de ação. A coluna tem largura máxima de 480 e conteúdo rolável, com texto que quebra em telas compactas.
+
+| Componente em `lib/widgets/janela_widgets.dart` | Uso |
+|---|---|
+| `CardEspaco` | Lista e exemplo no Guia, com estado e horário-limite |
+| `SeloStatus` | Cor de status, ícone e palavra, sem âmbar |
+| `BotaoJanela` | Ação primária âmbar, estado pressionado e variante secundária |
+| `CabecalhoSecao` | Título e microcopy de apoio |
+| `LinhaHorario` | Intervalo em JetBrains Mono, descrição e ação opcional |
+| `BarraGrafico` | Trilha e preenchimento com `LayoutBuilder` e `Container`, valor também em texto |
+| `EstadoVazio` | Mensagem específica e próxima ação |
+| `confirmarAcao` | Diálogo antes do cancelamento |
+| `PainelJanela` e `ConteudoJanela` | Superfícies, sombra, margens e coluna rolável compartilhadas |
+
+Os tokens são classes Dart em `lib/theme/`, não uma imagem de referência. O registro local de fontes segue a Aula 16; a centralização dos estilos e o contrato de componentes correspondem à Aula 17.
+
+## Arquitetura e fluxo de dados
+
+```text
+lib/models/   Espaco, Horario, Uso, Reserva, SituacaoEspaco
+     ^
+lib/data/     inventário + AgendaMock + ReservasRepository
+     ^
+lib/state/    JanelaState (ChangeNotifier, filtros e ações)
+
+lib/screens/  entrada, shell, detalhe, reserva, coordenação, guia
+     |              ação do aluno
+     v
+lib/state/    JanelaState -> repositório -> regra -> mutação
+     |              notifyListeners
+     v
+ListenableBuilder -> telas e indicadores atualizados
+
+lib/widgets/  componentes compartilhados usados pelas telas
+lib/theme/    cores, tipografia, espaçamento e sombras
 ```
 
-> **Nota sobre Windows.** Rodando no Windows, evite caminho com espaço ou dentro de pasta sincronizada em nuvem: o build fica instável. E para compilar para Android ou para Windows desktop é preciso ativar o **Modo de Desenvolvedor** do Windows, porque o Flutter cria symlinks para plugins nativos. Para web isso não é necessário.
-
-### Estrutura de pastas
-
-Segue a árvore que a Aula CPAD 16 (páginas 8 e 9) recomendou.
-
-```
-lib/
-├── main.dart                    # MaterialApp, tema e mapa de rotas nomeadas
-├── screens/
-│   └── login_screen.dart        # tela de entrada, a única que roda no CP4
-├── theme/
-│   ├── app_colors.dart          # a paleta, em static const Color
-│   ├── app_text.dart            # a escala tipográfica
-│   ├── app_spacing.dart         # régua de espaçamento, raio e alturas
-│   └── app_shadows.dart         # as duas sombras, em BoxShadow
-└── data/
-    └── espacos_mock.dart        # modelo Espaco, enums e os 14 espaços simulados
-
-assets/images/                   # marca em 1x, 2.0x e 3.0x, mais o ícone de app
-design/gerar_marca.py            # script que gera os arquivos da marca
-test/widget_test.dart            # 5 testes
-```
-
-`lib/widgets/` ainda não existe porque no CP4 não há componente reutilizado entre telas. Ela entra no CP5, junto com o card de espaço.
+`JanelaApp` mantém uma instância de `JanelaState` para as duas portas. Shell, detalhe e coordenação usam `ListenableBuilder`. Reservar e cancelar passam pelo estado, que notifica os consumidores. O relógio renova consultas a cada minuto e ao retornar ao app; não recria a sessão.
 
 ### Decisões técnicas
 
-**Tema enxuto, de propósito.** O `ThemeData` tem três coisas: `colorScheme` semeado pelo âmbar da marca, `useMaterial3` e o `textTheme` global do Poppins. `elevatedButtonTheme`, `inputDecorationTheme`, `cardTheme` e `appBarTheme` não aparecem em nenhum material da disciplina, e `ThemeData` global customizado com Design Tokens é o conteúdo anunciado para a aula 17. Estilo de componente fica inline por instância, com `ElevatedButton.styleFrom`, que é como as aulas fazem.
+- Repositório em memória como fonte única: consulta, reserva, cancelamento e painéis leem a mesma lista. Coleções compartilhadas são imutáveis para o consumidor.
+- `DateTime` e intervalos semiabertos: duas reservas adjacentes são válidas; duplicatas e sobreposições do aluno em espaços diferentes são rejeitadas. Apenas faixas inteiras de uma hora oferecidas no dia são aceitas.
+- Relógio `DateTime.now()` no uso normal e função injetável nos testes. O mock é criado na primeira consulta de cada dia, com abertura das 07h às 23h. Fora da abertura, a descrição informa fechamento. Na virada do dia, a agenda é reiniciada; reservas da sessão anterior não pertencem à oferta do novo dia.
+- Manutenção bloqueia o espaço no dia. Aulas e reservas bloqueiam suas faixas. O aluno não reserva uma faixa já iniciada. Cancelamento só remove reservas do aluno piloto.
+- Coordenação: ocupação simulada atual por andar inclui aulas e reservas ativas, com manutenção contada separadamente; demanda por hora conta reservas do mock e da sessão pelo início, sem inferir presença. Cancelamentos deixam de contar.
+- Sem pacotes externos de execução e sem plugins nativos. `flutter_test` e `flutter_lints` são dependências de desenvolvimento. A configuração Android já contém `android:label="Janela"` e `applicationId="br.com.janela.janela_app"`.
 
-**Cor centralizada em `AppColors`.** Nenhum `Color(0xFF...)` solto na tela e nenhum `Colors.white` ou `Colors.grey`, porque o Guia Prático trata cor repetida como magic number, "um número que não tem nome, não tem contexto".
+## Como rodar, testar e gerar APK
 
-**A semente do `ColorScheme` é o âmbar da marca.** Semeando com um neutro azul, os detalhes que o Material 3 distribui de graça (cursor, ripple, borda focada, seleção de texto) sairiam azuis e criariam um segundo acento por acidente.
+Requer Flutter 3.47.2, Dart 3.13.2 e, para APK, Android SDK e JDK configurados. Na máquina da dupla, Flutter fica em `C:\Users\roger\dev\flutter\bin\flutter.bat`.
 
-**Estado só onde precisa.** A tela de entrada é `StatelessWidget`, porque nada nela muda em resposta a interação. É a regra de decisão da Aula CPAD 14: "Esse widget vai mudar em resposta a algo? NÃO, StatelessWidget."
+```bash
+flutter pub get
+flutter run
+flutter analyze
+flutter test
+python design/gerar_amostras.py --check
+flutter build apk --release
+```
 
-**A tela responde a dois tamanhos de tela.** `LayoutBuilder` mais `SingleChildScrollView` mais `ConstrainedBox` mais `IntrinsicHeight` resolvem uma tensão real: o `Spacer` que empurra os botões para o rodapé precisa de altura limitada, mas rolar exige altura ilimitada. Sobrando espaço o `Spacer` funciona; faltando, a tela rola. E `maxContentWidth` mantém a coluna com largura de celular mesmo numa janela de navegador maximizada. É o item "testei em pelo menos dois tamanhos de tela" do checklist do Guia Prático.
+O APK de release foi gerado com `flutter build apk --release`, com tamanho de 47 MB, instalado e testado no emulador Android 14 (API 34). O comando grava `build/app/outputs/flutter-apk/app-release.apk`. A configuração Gradle usa assinatura de depuração no tipo release para distribuição acadêmica; não é uma configuração de publicação em loja.
 
-**O horário é `String`, não `DateTime`.** No mock, `livreAte: '15h40'`. Cálculo com data não foi ensinado, e o app nunca precisa computar duração, apenas exibir até quando o espaço está livre. A limitação é real e está registrada: se o produto precisar de fato medir se uma duração cabe no intervalo, o modelo não sustenta.
+Para instalar em um celular Android:
 
-**Rotas nomeadas já declaradas, com uma tela só.** O CP5 acrescenta telas ao mapa sem mexer no `main.dart`.
+1. Baixe o [APK Janela 1.0.0](https://github.com/RogerioOxy/fiap-cpad-janela-app/releases/download/v1.0.0/Janela-1.0.0.apk) no celular.
+2. Abra o arquivo baixado e permita a instalação de aplicativos de fonte desconhecida para o navegador ou gerenciador de arquivos, quando o Android solicitar.
+3. Confirme a instalação e toque em Abrir para iniciar o Janela.
 
-**Identificadores de domínio em português.** `Espaco`, `usoAtual`, `contarPorStatus`. É o estilo dos exemplos do próprio professor (`Perfil`, `CardPerfil`, `_contador`), e os idiomas do Flutter ficam em inglês (`LoginScreen`, `build`). Todo texto que aparece na tela leva acentuação correta.
+## Testes
 
-### Testes
+`test/reservas_test.dart` cobre o inventário, contagens exatas, status e horários, filtros combinados, detalhe, regras de reserva, duplicação, conflito entre espaços, faixas adjacentes, cancelamento, titularidade, agregações, avanço do relógio, virada de dia, reinício de sessão, imutabilidade e notificações de `ChangeNotifier`.
 
-Cinco testes, e dois deles existem por um motivo de entrega, não de engenharia:
+`test/widget_test.dart` mantém a entrada, os RMs, a contagem real do painel e a verificação das fontes locais e dos pesos variáveis. `test/fluxos_widget_test.dart` cobre filtros combinados, busca sem resultados, detalhe, resumo, confirmação, presença na aba Reservas, cancelamento com as duas decisões do diálogo, retorno do horário, mensagens de conflito, manutenção, estados vazios, saída para a Entrada, barras da coordenação e tokens do Guia visual. Também cobre atualização do relógio e fluxo em tela compacta com texto ampliado. `test/correcao_widget_test.dart` verifica largura dos cards, filtros horizontais, faixas restantes, mensagens de ocupação, disponibilidade com reservas e a superfície do diálogo.
 
-- a tela de entrada mostra marca e proposta de valor;
-- **a identificação dos dois integrantes está na tela**, para que a entrega não saia sem nome e RM se alguém editar o arquivo;
-- o botão principal informa a contagem real do mock, o que prova que a camada de dados está ligada;
-- **o mock cobre os três status e os três tipos de espaço**, porque o CP5 avalia realismo e cobertura de casos dos dados mockados;
-- espaço livre não declara uso atual, e ocupado declara quando libera.
+O teste de uso percorreu entrada, início, espaços, filtros, detalhe, reserva, minhas reservas, cancelamento, coordenação e guia visual no APK de release instalado no emulador Android 14 (API 34). As dez capturas em `docs/img/telas/` registram esses fluxos.
 
-### A tela de entrada
+## Aprendizados do grupo
 
-<img src="docs/img/tela-entrada.png" width="320" alt="Tela de entrada do Janela">
+Horário em texto basta para mostrar um rótulo, mas não sustenta regra de sobreposição. Intervalos com limite final exclusivo permitem validar esse comportamento sem ambiguidade. Um relógio fixo evita testes que passam à tarde e falham de madrugada. Contagem e painel precisam ler as mesmas reservas para refletir cancelamentos. Fontes locais preservam a identidade sem rede, e uma fonte variável exige declarar o eixo de peso. O resumo precisa revalidar o horário ao confirmar: a oferta pode mudar depois da seleção. Componentes compartilhados mantêm a mesma identidade na entrada, nas telas e no Guia visual. Testes de widget exercitam navegação e decisões de diálogo, enquanto a inspeção no dispositivo verifica composição e leitura.
 
-O botão principal lê o mock e informa quantos espaços estão livres agora, para a tela do CP4 não ser um template com a marca trocada.
+## Fora do escopo e por quê
 
----
-
-## g) Continuidade entre os três checkpoints
-
-A mesma ideia em três cortes, sem mudança de tema entre eles.
-
-No **CP4** entra o alicerce: marca e identidade visual definidas, a árvore `lib/` no formato ensinado, `AppColors` preenchido com a paleta real, o mapa de rotas declarado, o mock de espaços já escrito, e a tela de entrada rodando. Ela já é uma tela do produto final, não um placeholder descartável.
-
-No **CP5** o app ganha corpo sem ganhar comportamento: shell com navegação por abas, painel do momento, lista de espaços com status e horário-limite, filtros e detalhe navegável. O fluxo principal fica percorrível de ponta a ponta com dados falsos. Para a fidelidade ao design valer, o CP5 não muda uma cor nem uma fonte: usa o `app_colors.dart` deste checkpoint como está.
-
-No **CP6** entram as ações que mexem no estado, que são as mais arriscadas e por isso ficaram para o fim: reservar, cancelar, a aba de reservas e o painel da coordenação. Fecha com APK gerado e testado.
-
----
-
-## Limitações declaradas
-
-Preferimos registrar antes de alguém descobrir.
-
-1. **Sem persistência.** Quando a reserva existir, no CP6, ela viverá numa lista em memória e desaparecerá ao fechar o app. Hoje o mock tem os 14 espaços com seus estados e horários oferecidos, e nenhuma reserva: reservar é a primeira ação que muda estado, e por isso ficou para o fim.
-2. **O painel da coordenação mostra demanda declarada, não ocupação medida.** Sem check-in, ninguém sabe se quem reservou apareceu. O app diz isso na própria tela.
-3. **A entrada não autentica e ainda não roteia.** Ela apresenta as duas portas de acesso, aluno e coordenação, e no CP4 os dois botões exibem uma mensagem em vez de navegar, porque as telas de destino chegam no CP5 e no CP6. Não é login, e a documentação não chama isso de login.
-4. **`flutter build apk` não aparece em nenhum material da disciplina.** O único tutorial de build fornecido é de Expo e EAS, que é React Native e não se aplica a Flutter. O CP6 exige APK, então o procedimento será confirmado com o professor antes daquela entrega.
-5. **As fontes vêm por rede, não empacotadas.** O `google_fonts` busca Poppins e JetBrains Mono em tempo de execução. No web isso funciona, mas uma instalação Android de release sem acesso à Internet cairia na fonte de sistema e perderia a identidade tipográfica. Empacotar os arquivos em `assets/fonts/` e declará-los no `pubspec` resolve, e é o caminho antes do CP6. A Aula CPAD 16 (página 4) ensina esse registro.
-6. **A marca "Janela" tem colisão conhecida.** Existe um app chamado Janela no Google Play, e a Janela Digital S.A. é uma software house portuguesa de tecnologia imobiliária. A consulta ao INPI e a domínio está pendente. A escolha foi feita com esse custo à vista, e a regra que decorre dela é seguida em todo o projeto: a interface nunca usa "janela" como substantivo comum, dizendo sempre "livre até 15h40".
-
----
+| Item | Motivo |
+|---|---|
+| Backend e grade real | O protótipo usa dados fictícios, sem contrato com instituição ou API |
+| Persistência em disco | Reservas ficam no `ChangeNotifier` e no repositório em memória; fechar o app restaura o mock. A Aula 18 apresenta `shared_preferences` e `sqflite`, alternativas que exigem plugins e configuração nativa |
+| Autenticação e autorização reais | As portas representam perfis de demonstração; não há servidor nem sessão autenticada |
+| Check-in, QR code e presença física | Exigem confirmação no campus; os indicadores são simulados ou de demanda declarada |
+| Notificações | Exigem plugin e serviço além do processo do aplicativo |
+| Mapa do andar | Exige inventário gráfico do campus e não participa das regras de reserva |
+| Tema alternável | O produto aplica uma identidade escura única |
+| Aprovação institucional de auditório | O inventário fictício permite reserva direta; não representa autorização de uso real |
+| Publicação em loja e marca registrada | Há colisão conhecida do nome; INPI e domínio permanecem pendentes, como registrado no documento de marca |
 
 ## Licença e uso
 
-Trabalho acadêmico da FIAP. O código e a marca são dos autores.
+Trabalho acadêmico da FIAP. O código e a marca são dos autores. Fontes acompanhadas das respectivas licenças OFL.

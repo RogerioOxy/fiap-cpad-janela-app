@@ -1,6 +1,6 @@
 # Marca e identidade visual: Janela
 
-Documento de marca do Checkpoint 4 de Cross-Platform Application Development. Cobre nome, naming rationale, tom de voz, paleta, tipografia e uso do logo. O que está aqui é o contrato visual do projeto: nenhuma cor e nenhuma fonte muda depois deste checkpoint, porque o CP5 tem de ser fiel ao design definido aqui.
+Documento de marca do Checkpoint 4 de Cross-Platform Application Development. Cobre nome, naming rationale, tom de voz, paleta, tipografia e uso do logo. O que está aqui é o contrato visual do projeto: as telas seguem os tokens definidos aqui, preservados na evolução do projeto.
 
 Autores: Rogério Deligi Ferreira Filho (RM561942) e Maria Fernanda Garavelli Dantas (RM562686).
 
@@ -65,7 +65,7 @@ Três atributos, e cada um tem consequência prática no texto da interface.
 
 ### Microcopy padrão
 
-Estes textos são o padrão do produto e devem ser reaproveitados no CP5 e no CP6 em vez de reescritos.
+Estes textos são o padrão do produto, com espaço, horário e alternativa ajustados aos dados da consulta.
 
 | Situação | Texto |
 |---|---|
@@ -80,7 +80,7 @@ Note o padrão: **toda mensagem negativa já traz a próxima opção dentro dela
 
 ## 3. Decisão de tema: escuro
 
-O app tem um tema só, e é escuro. O tema alternável fica de fora porque `ThemeData` global customizado é conteúdo da aula 17, ainda não ministrada.
+O app tem um tema só, e é escuro. O tema alternável fica fora do escopo para preservar a identidade escura e um único acento de ação.
 
 O argumento é de cor, não de gosto. O acento âmbar só lê como luz havendo escuro em volta. Sobre branco, âmbar não lê como luz, lê como aviso, e **reprova contraste: `#FFB000` sobre branco dá 1,83:1**, abaixo de qualquer critério. O conceito da marca é luz entrando numa malha fechada, e num fundo claro a malha desaparece e a luz vira mancha.
 
@@ -95,11 +95,11 @@ theme: ThemeData(
     brightness: Brightness.dark,    // único acréscimo ao exemplo do Guia
   ),
   useMaterial3: true,
-  textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
+  fontFamily: 'Poppins',
 ),
 ```
 
-Duas ressalvas registradas. A base escura entra explicitamente no `poppinsTextTheme`, porque sem ela o tema monta sobre a base clara e o texto sai quase preto sobre fundo escuro. E o `colorScheme.primary` que o `fromSeed` gera não é exatamente `#FFB000`: o Material 3 escolhe um tom mais claro da mesma família. Isso afeta apenas cursor, ripple e borda focada. Tudo visualmente decisivo recebe `AppColors.primary` explícito.
+As fontes estão em `assets/fonts/` e registradas no `pubspec.yaml`, conforme a Aula CPAD 16, página 4. O tema aplica Poppins sem acesso à rede. O `colorScheme.primary` derivado da semente pode variar dentro da família âmbar; os elementos da marca usam `AppColors.primary` explícito.
 
 ---
 
@@ -127,7 +127,7 @@ Implementada em [`lib/theme/app_colors.dart`](../lib/theme/app_colors.dart). A e
 
 ### Regra de uso que sustenta a consistência
 
-**Âmbar é ação e marca. Cor de status é estado.** Nenhum número de hora, contagem ou ícone informativo usa âmbar. É isso que mantém o botão como a coisa mais quente da tela, e é a tentação mais forte do CP5: espalhar âmbar pelos horários de vinte cards mata o botão.
+**Âmbar é ação e marca. Cor de status é estado.** Nenhum número de hora, contagem ou ícone informativo usa âmbar. É isso que mantém o botão como a coisa mais quente da tela, e é uma regra para a lista: espalhar âmbar pelos horários de vinte cards mata o botão.
 
 ### Contraste verificado
 
@@ -158,7 +158,7 @@ Duas ressalvas que não escondemos. `slotDim` sobre `surface` dá 1,62:1, mas é
 
 ### Status nunca é indicado só por cor
 
-Regra obrigatória para as telas de estado, que chegam no CP5. Ela está definida aqui junto com os tokens e ainda não tem consumidor no CP4, onde a única tela é a de entrada. Onde o estado aparecer, aparecem as três redundâncias juntas, sempre as três.
+Regra obrigatória para as telas de estado: cor, ícone e palavra aparecem juntos. A presença dessas telas está descrita no README; esta seção define o contrato visual.
 
 | Estado | Ícone | Palavra | Faixa de tempo no card |
 |---|---|---|---|
@@ -178,11 +178,11 @@ Nenhum verde-vermelho de semáforo em nenhum lugar, e nenhum amarelo de status, 
 
 Implementada em [`lib/theme/app_text.dart`](../lib/theme/app_text.dart).
 
-**Interface: Poppins**, global via `GoogleFonts.poppinsTextTheme()`. É a família do exemplo do professor, é geométrica, tem contraforma aberta e altura-x generosa.
+**Interface: Poppins**, global via `fontFamily: 'Poppins'`, com os pesos locais registrados em `pubspec.yaml`. É a família do exemplo do professor, é geométrica, tem contraforma aberta e altura-x generosa.
 
-**Números: JetBrains Mono**, via `GoogleFonts.jetBrainsMono(...)`, só em hora e contagem.
+**Números: JetBrains Mono**, via `fontFamily: 'JetBrainsMono'`, só em hora e contagem. A fonte variável usa `fontWeight` junto com `fontVariations: [FontVariation('wght', peso)]`, com 500 para horas e 600 para contagens.
 
-A segunda família tem motivo técnico, não estético. Poppins não resolve tabela de horas: o avanço é largo e o `1` é uma haste com bandeirola e sem base. Como a tela deste app é sobretudo uma coluna de horários, hora e contagem vão em monoespaçada, que é tabular por construção e desenhada para desambiguar `1`, `7` e `0`. Isso **não acrescenta dependência**: `GoogleFonts.jetBrainsMono(...)` é o mesmo construto `GoogleFonts.poppins(...)` da página 3 do Guia, mudando só o nome da família, no mesmo pacote.
+A segunda família tem motivo técnico, não estético. Poppins não resolve tabela de horas: o avanço é largo e o `1` é uma haste com bandeirola e sem base. Como a tela deste app é sobretudo uma coluna de horários, hora e contagem vão em monoespaçada, que é tabular por construção e desenhada para desambiguar `1`, `7` e `0`. As duas famílias são assets locais com licenças OFL, sem dependência externa e sem download no uso do app.
 
 A segunda camada da solução é de layout: a coluna de hora vive num `SizedBox(width: 64)` com `textAlign: TextAlign.right`, para que `07h05` e `15h40` ocupem a mesma caixa. Alinhamento entre linhas de lista não depende só do avanço do glifo, depende do container.
 
@@ -306,7 +306,7 @@ Também foram descartados: a cruz de quatro vidros, que lê rápido mas colide c
 | Recusado | Por que doeria | O que fazemos em lugar |
 |---|---|---|
 | Gradiente na luz do logo e no fundo | é o jeito natural de desenhar luz | chapa plana mais `accentGlow` como `BoxShadow`, que é `BoxDecoration` puro |
-| `ThemeData` global com `cardTheme`, `elevatedButtonTheme`, `inputDecorationTheme` | eliminaria toda a repetição de estilo | é conteúdo da aula 17. Estilo repetido por widget, centralizado em `AppColors`, `AppText`, `AppSpacing` e `AppShadows` |
+| `cardTheme` e `elevatedButtonTheme` globais | eliminariam a personalização por componente | cards e botões compartilham os tokens por widget. O tema global configura campos, navegação e diálogos; o diálogo usa `AppColors.surface` com `surfaceTintColor: Colors.transparent` para preservar a paleta |
 | `ThemeExtension` e Design Tokens gerados | design system de verdade | aula 17. Citar sem usar seria fingir escopo |
 | Tema claro e escuro alternável | acessibilidade real em corredor ensolarado | aula 17. Escolhemos escuro e assumimos |
 | `FontFeature.tabularFigures()` | resolveria o numeral sem segunda família | exige importar `FontFeature` de `dart:ui`, fora do ensinado. Usamos mono mais caixa de largura fixa |
@@ -327,8 +327,8 @@ Onde esta identidade é cópia estrutural do que foi ensinado, e onde ela saiu d
 | `class AppColors` com `static const Color` em `lib/theme/app_colors.dart` | Guia Prático p2 e p3, Aula CPAD 16 p9 |
 | Nomes `primary`, `primaryDark`, `background`, `surface`, `border` | mesmos slots do `AppColors` do Guia |
 | `ColorScheme.fromSeed(seedColor:)` mais `useMaterial3: true` | Guia Prático p15 |
-| `textTheme: GoogleFonts.poppinsTextTheme()` | Guia Prático p4, marcado como recomendado |
-| `GoogleFonts.<familia>(fontSize:, fontWeight:, color:)` por `Text` | Guia Prático p4 |
+| `fontFamily: 'Poppins'` e fontes locais no `pubspec.yaml` | Aula CPAD 16 p4 |
+| `TextStyle(fontFamily:, fontSize:, fontWeight:, color:)` por `Text` | Aula CPAD 16 p4 |
 | `Scaffold(backgroundColor:)` | Guia Prático p15 |
 | `SizedBox(width: double.infinity, height: 52)` com `ElevatedButton` | Guia Prático p5 e p16 |
 | `ElevatedButton.styleFrom` com `shape: RoundedRectangleBorder` | Aula CPAD 16 p3, Guia p5 |
@@ -340,7 +340,7 @@ Onde esta identidade é cópia estrutural do que foi ensinado, e onde ela saiu d
 | Frames externos em `double.infinity`, tamanho fixo só em elemento interno | Guia Prático p1 e p2 |
 | Quebrar tela em métodos `_buildX()` | Guia Prático p5 |
 | **Desvio 1**: `brightness: Brightness.dark` no `fromSeed` | parâmetro nomeado do mesmo construtor ensinado |
-| **Desvio 2**: `GoogleFonts.jetBrainsMono(...)` para numeral | mesmo construto de `GoogleFonts.poppins(...)`, outra família, nenhuma dependência nova |
+| **Desvio 2**: `TextStyle` com JetBrains Mono para numeral | fonte local variável com eixo `wght`, sem pacote externo |
 | **Desvio 3**: `LayoutBuilder`, `ConstrainedBox` e `IntrinsicHeight` na tela de entrada | widgets de layout do próprio Flutter, sem pacote. Não aparecem no material, e entraram para resolver um defeito real: o `Spacer` que ancora os botões no rodapé exige altura limitada, e rolar exige altura ilimitada. Sem eles a tela estourava em janela curta, o que contraria o item "testei em pelo menos dois tamanhos de tela" do checklist do próprio Guia (página 8) |
 | **Desvio 4**: as classes `AppText`, `AppSpacing` e `AppShadows`, além do `AppColors` | mesma construção de `static const` que o Guia ensina para cor, aplicada a tipografia, espaçamento e sombra. O professor exigiu centralizar cor; centralizar os outros três é extensão estrutural do mesmo padrão, não recurso novo |
 
