@@ -1,106 +1,15 @@
-// Dados simulados dos espaços do campus.
-//
-// O enunciado do Checkpoint 5 diz que o protótipo funciona com dados mockados,
-// sem necessidade de backend real, e HTTP não foi visto nas aulas 13 a 16.
-// Então a fonte de verdade deste app é este arquivo: Dart puro, sem pacote.
-//
-// Em produção a fonte seria a grade horária da instituição, via API. Duplicar
-// horário à mão é o jeito mais rápido de o app ficar errado, e o README
-// registra isso como limitação consciente.
-//
-// Convenção de nomes: identificadores de domínio em português e sem acento
-// (`Espaco`, `usoAtual`), seguindo o estilo do próprio professor nas aulas
-// (`Perfil`, `CardPerfil`, `_contador`). Todo texto que aparece na interface
-// leva acentuação correta, porque é o que a pessoa lê na tela.
+import '../models/agenda.dart';
+import '../models/espaco.dart';
 
-/// Um espaço reservável do campus: sala, laboratório ou auditório.
-class Espaco {
-  final String id;
-  final String nome;
-  final TipoEspaco tipo;
-  final int andar;
-  final int capacidade;
-  final StatusEspaco status;
-
-  /// O que ocupa o espaço agora. `null` quando o espaço está livre.
-  final String? usoAtual;
-
-  /// Horário em que o espaço volta a ser usado, no formato `'15h40'`.
-  ///
-  /// Só faz sentido quando o status é [StatusEspaco.livre]. `null` significa
-  /// livre pelo resto do turno, e a interface trata esse caso com texto próprio
-  /// em vez de esconder a informação.
-  ///
-  /// É `String` e não `DateTime` de propósito: cálculo com data não foi ensinado
-  /// nas aulas 13 a 16, e o app nunca precisa computar duração, apenas exibir
-  /// até quando o espaço está livre.
-  final String? livreAte;
-
-  /// Horário em que o espaço fica livre. Só faz sentido quando o status é
-  /// [StatusEspaco.ocupado].
-  final String? livreApartirDe;
-
-  /// Faixas de horário que o aluno pode reservar neste espaço.
-  final List<String> horarios;
-
-  const Espaco({
-    required this.id,
-    required this.nome,
-    required this.tipo,
-    required this.andar,
-    required this.capacidade,
-    required this.status,
-    this.usoAtual,
-    this.livreAte,
-    this.livreApartirDe,
-    this.horarios = const [],
-  });
-}
-
-/// Tipo do espaço. Enum em vez de `String` para o filtro não depender de
-/// comparação de texto, que quebra em silêncio quando alguém erra a grafia.
-enum TipoEspaco { sala, laboratorio, auditorio }
-
-/// Situação do espaço no momento da consulta.
-///
-/// Os três valores têm cor própria na interface, mas cor nunca é o único
-/// sinal: cada status também tem ícone e rótulo em texto, porque status
-/// comunicado só por cor exclui quem tem deficiência de percepção de cor.
-enum StatusEspaco { livre, ocupado, manutencao }
-
-/// Rótulo de cada tipo, para exibir na interface.
-const Map<TipoEspaco, String> rotuloTipo = {
-  TipoEspaco.sala: 'Sala',
-  TipoEspaco.laboratorio: 'Laboratório',
-  TipoEspaco.auditorio: 'Auditório',
-};
-
-/// Rótulo de cada status. É o sinal textual que acompanha a cor.
-const Map<StatusEspaco, String> rotuloStatus = {
-  StatusEspaco.livre: 'Livre',
-  StatusEspaco.ocupado: 'Ocupado',
-  StatusEspaco.manutencao: 'Em manutenção',
-};
-
-/// Os espaços do campus piloto.
-///
-/// A lista cobre de propósito os três status, os três tipos, quatro andares e
-/// os turnos de tarde e noite. Dado simulado só serve se exercitar todos os
-/// caminhos da interface, incluindo os dois casos-limite: o espaço livre pelo
-/// resto do turno (`livreAte` nulo) e o espaço em manutenção, que não oferece
-/// horário nenhum.
-const List<Espaco> espacos = [
-  // ---------- 1º andar ----------
+/// Inventário fictício. A Sala 210 não recebe usos nem reservas iniciais.
+const espacos = <Espaco>[
   Espaco(
     id: 'S101',
     nome: 'Sala 101',
     tipo: TipoEspaco.sala,
     andar: 1,
     capacidade: 40,
-    status: StatusEspaco.ocupado,
-    usoAtual: 'Algoritmos e Estrutura de Dados · 1CCPM',
-    livreApartirDe: '15h40',
-    horarios: ['15h40 às 17h10', '17h20 às 18h50', '19h às 20h30'],
+    recursos: ['Projetor', 'Lousa'],
   ),
   Espaco(
     id: 'S104',
@@ -108,9 +17,7 @@ const List<Espaco> espacos = [
     tipo: TipoEspaco.sala,
     andar: 1,
     capacidade: 32,
-    status: StatusEspaco.livre,
-    livreAte: '15h40',
-    horarios: ['14h às 15h30'],
+    recursos: ['TV', 'Lousa'],
   ),
   Espaco(
     id: 'A101',
@@ -118,22 +25,15 @@ const List<Espaco> espacos = [
     tipo: TipoEspaco.auditorio,
     andar: 1,
     capacidade: 180,
-    status: StatusEspaco.ocupado,
-    usoAtual: 'Palestra de abertura da Semana de Tecnologia',
-    livreApartirDe: '18h',
-    horarios: ['18h às 19h30', '19h40 às 21h10'],
+    recursos: ['Palco', 'Microfone', 'Projetor'],
   ),
-
-  // ---------- 2º andar ----------
   Espaco(
     id: 'L201',
     nome: 'Lab 201',
     tipo: TipoEspaco.laboratorio,
     andar: 2,
     capacidade: 30,
-    status: StatusEspaco.livre,
-    livreAte: '17h20',
-    horarios: ['14h às 15h30', '15h40 às 17h10'],
+    recursos: ['Computadores', 'Projetor'],
   ),
   Espaco(
     id: 'L204',
@@ -141,8 +41,7 @@ const List<Espaco> espacos = [
     tipo: TipoEspaco.laboratorio,
     andar: 2,
     capacidade: 24,
-    status: StatusEspaco.manutencao,
-    usoAtual: 'Troca de equipamento, previsão de retorno amanhã',
+    recursos: ['Computadores', 'Bancadas'],
   ),
   Espaco(
     id: 'S207',
@@ -150,10 +49,7 @@ const List<Espaco> espacos = [
     tipo: TipoEspaco.sala,
     andar: 2,
     capacidade: 45,
-    status: StatusEspaco.ocupado,
-    usoAtual: 'Banco de Dados · 3CCPN',
-    livreApartirDe: '20h40',
-    horarios: ['20h40 às 22h10'],
+    recursos: ['Projetor', 'Lousa'],
   ),
   Espaco(
     id: 'S210',
@@ -161,20 +57,15 @@ const List<Espaco> espacos = [
     tipo: TipoEspaco.sala,
     andar: 2,
     capacidade: 28,
-    status: StatusEspaco.livre,
-    // Sem `livreAte`: livre pelo resto do turno.
-    horarios: ['14h às 15h30', '15h40 às 17h10', '17h20 às 18h50'],
+    recursos: ['Lousa', 'Tomadas'],
   ),
-
-  // ---------- 3º andar ----------
   Espaco(
     id: 'L305',
     nome: 'Lab 305',
     tipo: TipoEspaco.laboratorio,
     andar: 3,
     capacidade: 30,
-    status: StatusEspaco.manutencao,
-    usoAtual: 'Manutenção da rede elétrica, sem previsão',
+    recursos: ['Computadores', 'Rede cabeada'],
   ),
   Espaco(
     id: 'S312',
@@ -182,9 +73,7 @@ const List<Espaco> espacos = [
     tipo: TipoEspaco.sala,
     andar: 3,
     capacidade: 36,
-    status: StatusEspaco.livre,
-    livreAte: '15h40',
-    horarios: ['14h às 15h30'],
+    recursos: ['TV', 'Lousa'],
   ),
   Espaco(
     id: 'S315',
@@ -192,9 +81,7 @@ const List<Espaco> espacos = [
     tipo: TipoEspaco.sala,
     andar: 3,
     capacidade: 20,
-    status: StatusEspaco.livre,
-    livreAte: '19h',
-    horarios: ['14h às 15h30', '15h40 às 17h10', '17h20 às 18h50'],
+    recursos: ['Lousa', 'Tomadas'],
   ),
   Espaco(
     id: 'L308',
@@ -202,23 +89,15 @@ const List<Espaco> espacos = [
     tipo: TipoEspaco.laboratorio,
     andar: 3,
     capacidade: 26,
-    status: StatusEspaco.ocupado,
-    usoAtual: 'Redes de Computadores · 2CCPW',
-    livreApartirDe: '17h20',
-    horarios: ['17h20 às 18h50', '19h às 20h30'],
+    recursos: ['Computadores', 'Projetor'],
   ),
-
-  // ---------- 4º andar ----------
   Espaco(
     id: 'S407',
     nome: 'Sala 407',
     tipo: TipoEspaco.sala,
     andar: 4,
     capacidade: 24,
-    status: StatusEspaco.ocupado,
-    usoAtual: 'Engenharia de Software · 4CCPM',
-    livreApartirDe: '15h40',
-    horarios: ['15h40 às 17h10', '17h20 às 18h50'],
+    recursos: ['Projetor', 'Lousa'],
   ),
   Espaco(
     id: 'S412',
@@ -226,9 +105,7 @@ const List<Espaco> espacos = [
     tipo: TipoEspaco.sala,
     andar: 4,
     capacidade: 16,
-    status: StatusEspaco.livre,
-    livreAte: '17h20',
-    horarios: ['14h às 15h30', '15h40 às 17h10'],
+    recursos: ['TV', 'Tomadas'],
   ),
   Espaco(
     id: 'A402',
@@ -236,23 +113,76 @@ const List<Espaco> espacos = [
     tipo: TipoEspaco.auditorio,
     andar: 4,
     capacidade: 90,
-    status: StatusEspaco.livre,
-    livreAte: '19h',
-    horarios: ['14h às 15h30', '15h40 às 17h10', '17h20 às 18h50'],
+    recursos: ['Microfone', 'Projetor'],
+  ),
+  Espaco(
+    id: 'L501',
+    nome: 'Lab de robótica',
+    tipo: TipoEspaco.laboratorio,
+    andar: 5,
+    capacidade: 18,
+    recursos: ['Bancadas', 'Kits de robótica'],
+  ),
+  Espaco(
+    id: 'S504',
+    nome: 'Sala de projetos',
+    tipo: TipoEspaco.sala,
+    andar: 5,
+    capacidade: 12,
+    recursos: ['Lousa', 'Mesa coletiva'],
   ),
 ];
 
-/// Andares que aparecem no filtro, derivados da lista e não digitados à mão.
-///
-/// Número digitado à mão desencontra da lista assim que um espaço é adicionado,
-/// e a interface passa a oferecer filtro que não acha nada.
-List<int> get andaresDisponiveis {
-  final andares = espacos.map((e) => e.andar).toSet().toList();
-  andares.sort();
-  return andares;
+/// Oferta do dia, das 07h às 23h. A reserva usa uma faixa inteira de uma hora.
+List<Horario> horariosDoDia(DateTime dia) => [
+  for (var h = 7; h < 23; h++)
+    Horario(
+      DateTime(dia.year, dia.month, dia.day, h),
+      DateTime(dia.year, dia.month, dia.day, h + 1),
+    ),
+];
+
+class AgendaMock {
+  AgendaMock(DateTime referencia) {
+    final dia = diaDe(referencia);
+    final horarios = horariosDoDia(dia);
+    final ancora = (referencia.hour - 7).clamp(0, horarios.length - 1);
+    usos = List.unmodifiable([
+      for (final id in ['L204', 'L305'])
+        Uso(
+          espacoId: id,
+          horario: Horario(dia, DateTime(dia.year, dia.month, dia.day + 1)),
+          descricao: 'Revisão de equipamentos e rede',
+          manutencao: true,
+        ),
+      for (final id in ['S101', 'S207', 'L308', 'S407'])
+        Uso(
+          espacoId: id,
+          horario: horarios[ancora],
+          descricao:
+              'Aula de ${id == 'L308' ? 'Redes de Computadores' : 'Engenharia de Software'}',
+        ),
+      if (ancora + 2 < horarios.length)
+        for (final id in ['S104', 'L201', 'S312', 'A402'])
+          Uso(
+            espacoId: id,
+            horario: horarios[ancora + 2],
+            descricao: 'Trabalho orientado · 2CCPW',
+          ),
+    ]);
+    reservas = List.unmodifiable([
+      for (var i = 0; i < 5; i++)
+        Reserva(
+          id: 'mock-$i',
+          espacoId: ['A101', 'S315', 'S412', 'L501', 'S504'][i],
+          usuarioId: i == 2 ? usuarioAtual : 'aluno-${i + 1}',
+          horario: horarios[(ancora + i).clamp(0, horarios.length - 1)],
+        ),
+    ]);
+  }
+
+  late final List<Uso> usos;
+  late final List<Reserva> reservas;
 }
 
-/// Quantos espaços estão em cada status. Alimenta o painel do momento.
-int contarPorStatus(StatusEspaco status) {
-  return espacos.where((e) => e.status == status).length;
-}
+const usuarioAtual = 'aluno-piloto';
